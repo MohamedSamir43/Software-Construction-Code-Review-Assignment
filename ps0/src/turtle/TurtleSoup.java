@@ -30,7 +30,7 @@ public class TurtleSoup {
      * @return angle in degrees, where 0 <= angle < 360
      */
     public static double calculateRegularPolygonAngle(int sides) {
-        throw new RuntimeException("implement me!");
+        return (sides-2)*180.0/sides;
     }
 
     /**
@@ -44,7 +44,7 @@ public class TurtleSoup {
      * @return the integer number of sides
      */
     public static int calculatePolygonSidesFromAngle(double angle) {
-        throw new RuntimeException("implement me!");
+        return (int)(Math.round(360/(180-angle)));
     }
 
     /**
@@ -57,7 +57,10 @@ public class TurtleSoup {
      * @param sideLength length of each side
      */
     public static void drawRegularPolygon(Turtle turtle, int sides, int sideLength) {
-        throw new RuntimeException("implement me!");
+        for(int i = sides; i > 0; i--){
+            turtle.forward(sideLength);
+            turtle.turn(180.0 - calculateRegularPolygonAngle(sides));
+        }
     }
 
     /**
@@ -81,7 +84,10 @@ public class TurtleSoup {
      */
     public static double calculateHeadingToPoint(double currentHeading, int currentX, int currentY,
                                                  int targetX, int targetY) {
-        throw new RuntimeException("implement me!");
+        double rY = targetY - currentY;
+        double rX = targetX - currentX;
+        double angle = Math.atan(rX/rY)*360/(2*Math.PI) - currentHeading;
+        return angle < 0.0 ? 360.0 + angle: angle;
     }
 
     /**
@@ -99,7 +105,13 @@ public class TurtleSoup {
      *         otherwise of size (# of points) - 1
      */
     public static List<Double> calculateHeadings(List<Integer> xCoords, List<Integer> yCoords) {
-        throw new RuntimeException("implement me!");
+        List<Double> res = new ArrayList<Double>();
+        double relHeading = 0.0;
+        for(int i = 0; i < xCoords.size()-1; i++){
+            relHeading = calculateHeadingToPoint(relHeading, xCoords.get(i), yCoords.get(i), xCoords.get(i+1), yCoords.get(i+1));
+            res.add(relHeading);
+        }
+        return res;
     }
 
     /**
@@ -111,7 +123,16 @@ public class TurtleSoup {
      * @param turtle the turtle context
      */
     public static void drawPersonalArt(Turtle turtle) {
-        throw new RuntimeException("implement me!");
+        int sides = 5;
+        int sideLength = 100;
+        for(int i = sides; i > 0; i--){
+            for(int y = 30; y>0; y-=10){
+                drawRegularPolygon(turtle, 5, y);
+            }
+            drawRegularPolygon(turtle, 5, 50);
+            turtle.forward(sideLength);
+            turtle.turn(180.0 - calculateRegularPolygonAngle(sides));
+        }
     }
 
     /**
